@@ -17,17 +17,19 @@ def combine(leftIm, rightIm):
 
 
 def segmentImage(im, topleft, topright, direction):
-	if direction == "Left":
+	if direction == "left":
 		return im[:, 0:topleft[1], :], im[:, topleft[1]:, :]
 	else: 
 		return im[:, topright[1]:, :], im[:, 0:topright[1], :]
 
 
 def deleteLines(im):
+	
 	gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
 	mag = filters.sobel(gray.astype("float"))
 	carved = transform.seam_carve(im, mag, 'vertical', 3)
-	return carved
+	# print (carved)
+	return (carved * 255).astype('uint8')
 	## segment image
 	## delete from segment
 	## append back to image

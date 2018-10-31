@@ -9,9 +9,11 @@ def determineClosestVLine(middle_pt, image):
 	y_len, x_len, depth_len = image.shape
 	quad_line = [x_len/3, x_len*2/3, x_len, 0]
 	x_key = np.argmin(abs(np.asarray(quad_line) - middle_pt[1]))
-	return quad_line, quad_line[x_key]
+	print (quad_line, middle_pt)
+	return quad_line, quad_line[x_key], (middle_pt[1] < quad_line[1] and middle_pt[1] > quad_line[0])
 
 def combine(leftIm, rightIm):
+	print (leftIm.shape, rightIm.shape)
 	return np.hstack((leftIm, rightIm))
 
 
@@ -26,7 +28,7 @@ def segmentImage(im, topleft, topright, direction):
 def deleteLines(im):
 	
 	gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
-	mag = filters.sobel(gray.astype("float"))
+	mag = filters.sobel(gray)
 	carved = transform.seam_carve(im, mag, 'vertical', 3)
 	# print (carved)
 	return (carved * 255).astype('uint8')
@@ -37,5 +39,7 @@ def deleteLines(im):
 
 def generateLines():
 	print ("generate")
+
+
 
 

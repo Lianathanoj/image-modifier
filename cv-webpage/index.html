@@ -17,57 +17,38 @@
     <div class="divider"></div>
     <div class="container">
       <div class="section">
-        <h3>Problem Statement</h3>
-        <p>The goal of the project is to process an image to be more pleasing to the eye according to the rules of third, a photographic guideline used in visual compositions. This will be carried out and compared through different methods. The expected input is an image with a person or group of people, and the expected output is an image with points of interest repositioned to be at 
-        "pleasing" points according to the rule of thirds.</p>
+        <h3 class="center">Abstract</h3>
+        <p>The rule of thirds is an image metric used by photographers to increase the overall aesthetic of a composition, wherein an image is overlaid onto a 3 x 3 grid and the subject matter becomes more qualitatively agreeable if it falls within the middle intersections of the grid. </p>
       </div>
     </div>
     <div class="divider"></div>
     <div class="container">
       <div class="section">
-        <h3>Technical Approach</h3>
-        <p>We will have multiple methods for implementing rule of thirds, which can be divided into three different parts. For these three parts (pre-processing, feature selection, and warping), we have multiple, different methods for each that will be mixed-and-matched.</p>
+        <h3 class="center">Introduction</h3>
+        <p>The goal of the project is to thus process an image to be more pleasing to the eye according to the rule of thirds. The expected input is an image with a person or group of people, and the expected output is an image with points of interest repositioned to be at "pleasing" points according to the rule of thirds.</p>
       </div>
-      <h5>Pre-Processing Methods</h5>
-      <ul class="browser-default">
-        <li>Smoothing
-          <ul class="browser-default">
-            <li>Gaussian filter</li>
-            <li>Box filter</li>
-          </ul>
-        </li>
-        <li>Median Filter</li>
-        <li>Data Pre-Processing for Semantic Segmentation
-          <ul class="browser-default">
-            <li>Augmentation</li>
-            <li>Balancing</li>
-            <li>Noise</li>
-          </ul>
-        </li>
-      </ul>
+    </div>
+    <div class="divider"></div>
+    <div class="container">
+      <div class="section">
+        <h3 class="center">Technical Approach</h3>
+        <p>Our technical approach can be subdivided into multiple steps. First, we will be utilizing a Mask R-CNN which has been pre-trained upon a large set of images. We will then be able to extract an image's important areas of interest which will allow us to later transform the image to adhere to the rule of thirds.</p>
+      </div>
+      
+      <h5>1) Determining Bounding Box and Masks of Points of Interest Via Feature Extraction</h5>
+      Using a Mask Regional Convolutional Neural Network (R-CNN) from https://github.com/matterport/Mask_RCNN, we extracted areas of interest such as the relevant bounding boxes and semantic segmentation masks for people that were at different points in a picture. Note that the Mask R-CNN already had a pre-trained classifier that we opted to use because it sufficiently was able to detect different classes. We tested self-retrieved pictures to make sure that humans were being correctly detected and to ensure that our bounding box correctly encapsulated human outlines.
 
-      <h5>Selecting Points of Interest</h5>
-      <ul class="browser-default">
-        <li>Method 1 (Energy function + Seam Carving)
-          <ol>
-            <li>Find the points of interest of the image according to high energy points and places of high energy, where there are the most changes</li>
-            <li>Ensure interest points are sufficient distances away from each other</li>
-          </ol>
-        </li>
-        <li>Method 2 (Feature Selection)
-          <ol>
-            <li>Create a classifier to detect important features (e.g. human outline) that will be used in determining which portion of an image to move/warp</li>
-          </ol>
-        </li>
-        <li>Method 3 (Semantic Segmentation)
-          <ol>
-            <li>Apply segmentation techniques to determine human outline</li>
-            <li>Model - Mask R-CNN</li>
-          </ol>
-        </li>
-      </ul>
+      <h5>2) Seam Carving Techniques</h5>
+      After we have outputted the picture and the relevant bounding boxes, we apply certain rules to remove or generate pixels based upon the location of the bounding boxes and use the mask to determine the energy of the image.
+      <div style="margin-left:40px;">
+        <p style="font-weight:450;">a) Seam Removal</p>
+        <p style="font-weight:450;">b) Seam Generation</p>
+      </div>
 
-      <h5>Image Modification</h5>
+      <h5>3) Image Modifications</h5>
+      Based upon the mask and bounding boxes passed in, we 
+
+      <!-- <h5 class="center">Image Modification</h5>
       <ul class="browser-default">
         <li>Homography Transformation + Seam Carving
           <ol>
@@ -75,12 +56,12 @@
             <li>Use seam carving technique to resize those images to a standard, rectangular shape</li>
           </ol>
         </li>
-      </ul>
+      </ul> -->
     </div>
     <div class="divider"></div>
     <div class="container">
       <div class="section">
-        <h3>Experiment and Results</h3>
+        <h3 class="center">Experiment and Results</h3>
         <ol>
           <li>Experiment Setup
             <ol>
@@ -116,6 +97,20 @@
             </ol>
           </li>
         </ol>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="container">
+      <div class="section">
+        <h3 class="center">Conclusion and Future Work</h3>
+        
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="container">
+      <div class="section">
+        <h3 class="center">References</h3>
+        https://github.com/matterport/Mask_RCNN
       </div>
     </div>
     <script type="text/javascript" src="js/materialize.min.js"></script>

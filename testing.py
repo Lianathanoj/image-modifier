@@ -6,6 +6,7 @@ from skimage import filters
 import cv2
 import rule
 import seam_adding
+
 f, axarr = plt.subplots(1, 2)
 
 im = plt.imread("images/railroad_girl.jpg", format='jpeg')
@@ -18,8 +19,7 @@ bottomleft = [644, 870]
 bottomright = [644, 1144]
 
 axarr[0].imshow(im)
-# plt.show()
-# exit()
+
 middle_pt = [(topleft[0]+bottomleft[0])/2, (topright[1]+topleft[1])/2]
 
 # Determine closest vertical line
@@ -36,15 +36,6 @@ else:
 	segmentingLine = line
 
 print (im.shape[1], line)
-
-# print (quad)
-# print (line)
-
-
-# for x in quad:
-# 	axarr[0].axvline(x=x)
-# print (im)
-
 
 if segmentingLine == quad[0]:
 	# while middle point not near the vertical line, do operation and recalculate stuff
@@ -158,10 +149,6 @@ else:
 		## bounding and midpoint no change
 axarr[1].imshow(im)
 axarr[1].axvline(x=line)
-# print (im)
-
-
-
 
 plt.show()
 

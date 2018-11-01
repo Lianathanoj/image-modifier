@@ -10,7 +10,7 @@ import create_mrcnn
 
 f, axarr = plt.subplots(1, 2)
 
-im = plt.imread("images/lake.jpg", format='jpeg')
+im = plt.imread("images/travel-alone.jpg", format='jpeg')
 print (im.shape)
 
 model, class_names = create_mrcnn.create_model()
@@ -108,7 +108,10 @@ elif segmentingLine == quad[2]:
 
 		im = rule.combine(boundingIm, segmentIm)
 
-		line += 1
+		if line > im.shape[1]/2:
+			line += 2
+		else:
+			line += 1
 		if img_temp.shape[1] <= 5 and not onepass:
 			img_temp = None
 			onepass = True
@@ -122,7 +125,10 @@ elif segmentingLine == quad[2]:
 
 		im = rule.combine(segmentIm, boundingIm)
 
-		line -= 1
+		if line > im.shape[1]/2:
+			line -= 2
+		else:
+			line -= 1
 		## bounding and midpoint change:
 		topleft[1] -= 3
 		topright[1] -= 3
@@ -142,7 +148,10 @@ else:
 
 		im = rule.combine(segmentIm, boundingIm)
 
-		line += 1
+		if line > im.shape[1]/2:
+			line += 2
+		else:
+			line += 1
 
 		topleft[1] +=3
 		topright[1] += 3
@@ -160,7 +169,10 @@ else:
 		im = rule.combine(boundingIm, segmentIm)
 		im = im.astype('uint8')
 
-		line -= 1
+		if line > im.shape[1]/2:
+			line -= 2
+		else:
+			line -= 1
 		## bounding and midpoint no change
 axarr[0].set_title('Original')
 axarr[1].imshow(im)

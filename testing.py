@@ -6,17 +6,26 @@ from skimage import filters
 import cv2
 import rule
 import seam_adding
+import create_mrcnn
 
 f, axarr = plt.subplots(1, 2)
 
-im = plt.imread("images/railroad_girl.jpg", format='jpeg')
+im = plt.imread("images/lake.jpg", format='jpeg')
 print (im.shape)
-# im = im.astype('uint8')
-# print (im.shape)
-topleft = [56, 870]
-topright = [56, 1144]
-bottomleft = [644, 870]
-bottomright = [644, 1144]
+
+model, class_names = create_mrcnn.create_model()
+results = model.detect([im], verbose=1)
+r = results[0]
+
+for i in range(len(r['class_ids'])):
+	if r['class_ids'][i] == 1:
+		bbox = r['rois'][i]
+		topleft = [bbox[0], bbox[1]]
+		topright = [bbox[0], bbox[3]]
+		bottomleft = [bbox[2], bbox[1]]
+		bottomright = [bbox[2], bbox[3]]
+		print(bbox)
+		break
 
 axarr[0].imshow(im)
 
@@ -25,7 +34,13 @@ middle_pt = [(topleft[0]+bottomleft[0])/2, (topright[1]+topleft[1])/2]
 # Determine closest vertical line
 quad, line, isMiddle = rule.determineClosestVLine(middle_pt, im)
 
-axarr[0].axvline(x=line)
+if line is quad[2]:
+	axarr[0].axvline(x=quad[1])
+elif line is quad[3]:
+	axarr[0].axvline(x=quad[0])
+else:
+	axarr[0].axvline(x=line)
+
 print (isMiddle, line)
 if isMiddle:
 	if line is quad[0]:
@@ -147,7 +162,9 @@ else:
 
 		line -= 1
 		## bounding and midpoint no change
+axarr[0].set_title('Original')
 axarr[1].imshow(im)
+axarr[1].set_title('Modified')
 axarr[1].axvline(x=line)
 
 plt.show()

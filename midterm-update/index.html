@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8"/>
     <title>Computer Vision Project</title>
     <div class="center">
       <h1>Image Modification Using Rule of Thirds</h1>
@@ -80,14 +81,14 @@
         <p>In the two figures below, the subject is located in the middle between the two vertical rule-of-thirds lines. She is closer to the right side, so we will want to align her along that line. To do so, our seam carving algorithm removed seams from the right of the subject to move the vertical rule-of-thirds line to the left. The background of the picture has no significant objects/features so our seam removal has little negative consequences on the aesthetic of the picture.</p>
         <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result1.png" alt="Result Figures 1"></div>
 
-        <p>In the next two figures below, the subject is located far to the right in this picture, close to the right boundary of the image. Ideally, she should be placed along the second rule-of-thirds line. Our algorithm does a series of seam additions to the right of the woman and seam removals to the left of the woman until she is aligned correctly. There are slight artifacts resulting from the seam addition because there are not as many pixels to the right of the subject to replicate.</p>
-        <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result2.png" alt="Result Figures 2"></div>
-
-        <p>For the next two figures below, the original picture is already quite close to placing the subject along the second-third line; she is a little too far to the right of it however. For this image, our algorithm removes vertical seams from the left of the subject.</p>
+        <p>For the next two figures below, the original picture is already quite close to placing the subject along the second-third line; she is a little too far to the right of it when using the rule of thirds line as the base point. For this image, our algorithm removes vertical seams from the left of the subject.</p>
         <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result3.png" alt="Result Figures 3"></div>
 
         <p>In the next two figures below, the subject in this image is in the center, but he is closer to the left rule-of-thirds line. To align the two, we remove seams to the left of the person.</p>
         <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result4.png" alt="Result Figures 4"></div>
+
+        <p>In the next two figures below, the subject is located far to the right in this picture, close to the right boundary of the image. Ideally, she should be placed along the second rule-of-thirds line. Our algorithm does a series of seam additions to the right of the woman and seam removals to the left of the woman until she is aligned correctly. There are slight artifacts resulting from the seam addition because there are not as many pixels to the right of the subject to replicate. For future steps, we will be trying to implement post processing techniques to reduce these artifacts.</p>
+        <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result2.png" alt="Result Figures 2"></div>
 
         <p>The final two figures below represent an example of a failure case for our algorithm. The subject is in the center of the image but closer to the vertical first third line. When our algorithm removes seams from the left of the person, the seam carving algorithm has no knowledge of the road in the background or the straight edges of the side of the road that should be maintained. Thus, the removals leave obvious artifacts.</p>
         <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result5.png" alt="Result Figures 5"></div>
@@ -107,7 +108,6 @@
       <div class="center section">
         <h3>References</h3>
         <ul>
-          <li>https://github.com/Lianathanoj/image-modifier</li>
           <li>http://cocodataset.org</li>
           <li>https://github.com/matterport/Mask_RCNN</li>
           <li>https://link.springer.com/chapter/10.1007/978-3-319-75417-8_44</li>

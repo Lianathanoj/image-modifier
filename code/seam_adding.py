@@ -4,20 +4,24 @@ import numpy as np
 
 def addLines(img_input, img_removed=None):
     if img_removed is None:
-        img = np.copy(img_input) 
+        removed_seams = np.copy(img_input) 
     else:
-        img = img_removed
+        removed_seams = img_removed
     img_output = np.copy(img_input) 
     energy = compute_energy_matrix(img) # Same than previous code sample
- 
+    
+    # Add 3 seams at a time
     for i in range(3): 
-        seam = find_vertical_seam(img, energy) # Same than previous code sample
-        img = remove_vertical_seam(img, seam) # Same than previous code sample
+        seam = find_vertical_seam(removed_seams, energy) # Same than previous code sample
+        # removed_seams keeps track of what seams were already selected 
+        #    to be re-added
+        removed_seams = remove_vertical_seam(removed_seams, seam) # Same than previous code sample
         img_output = add_vertical_seam(img_output, seam, i) 
-        energy = compute_energy_matrix(img) 
+        # Recompute energy matrix
+        energy = compute_energy_matrix(removed_seams) 
         print('Number of seams added =', i+1)
 
-    return img_output, img
+    return img_output, removed_seams
 
 # Add a vertical seam to the image 
 def add_vertical_seam(img, seam, num_iter): 

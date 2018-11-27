@@ -36,10 +36,3 @@ def deleteLines(im):
 	## delete from segment
 	## append back to image
 	## yay.
-
-def generateLines():
-	print ("generate")
-
-
-
-

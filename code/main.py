@@ -12,7 +12,7 @@ if __name__ == "__main__":
 	f, axarr = plt.subplots(1, 2)
 
 	# Read in the image to modify
-	im = plt.imread("images/outdoor.jpg", format='jpeg')
+	im = plt.imread("images/railroad_girl.jpeg", format='jpeg')
 
 	# Run the MaskRCNN to detect objects
 	model, class_names = create_mrcnn.create_model()
@@ -53,6 +53,7 @@ if __name__ == "__main__":
 	axarr[0].axvline(x=line)
 	axarr[0].axhline(y=h_thirds[0])
 	axarr[0].axhline(y=h_thirds[1])
+	axarr[0].plot(middle_pt[1], middle_pt[0], marker='o', color='red')
 	# if line is quad[2]:
 	# 	axarr[0].axvline(x=quad[1])
 	# elif line is quad[3]:
@@ -60,6 +61,7 @@ if __name__ == "__main__":
 	# else:
 	# 	axarr[0].axvline(x=line)
 
+	# Vertical Seams
 	if isMiddle:
 		print("Object in middle")
 		# closest line is left line, delete from the left
@@ -75,12 +77,19 @@ if __name__ == "__main__":
 				line -= 2
 				# middle_pt[1] -= 3
 	else:
-		# closest edge is right edge
-		if line is quad[2]:
-			print("hi")
-		#closest edge is left edge
-		elif line is quad[3]:
+		# object is on right side
+		if line is quad[2] or line is quad[1]:
+			print("Object is on right side")
+			im_temp = None
+			while abs(middle_pt[1] - line) > 5:
+				print(abs(middle_pt[1] - line))
+				im, im_temp, mask, bbox = seam_adding.addLines(im, 'blqh', mask, bbox, 'right', im_temp)
+				line +=2
+		# object is on left side
+		elif line is quad[3] or line is quad[0]:
 			print("bye")
+
+	# Horizontal Seam
 
 	axarr[0].set_title('Original')
 	axarr[1].imshow(im)

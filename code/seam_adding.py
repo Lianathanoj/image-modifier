@@ -1,6 +1,7 @@
 import sys
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
 
 def addLines(img_input, direction, mask, bbox, side, img_removed=None):
     if img_removed is None:
@@ -8,7 +9,7 @@ def addLines(img_input, direction, mask, bbox, side, img_removed=None):
     else:
         removed_seams = img_removed
     img_output = np.copy(img_input)
-    energy = compute_energy_matrix(img)
+    energy = compute_energy_matrix(removed_seams)
     energy = manipulate_energy_image(energy, mask, bbox, side)
 
     # Add 3 seams at a time
@@ -22,9 +23,23 @@ def addLines(img_input, direction, mask, bbox, side, img_removed=None):
 
         # Recompute energy matrix
         energy = compute_energy_matrix(removed_seams)
+        # Calculate New Mask
+        if side == 'up':
+            mask = mask[1:,:]
+            bbox[0][0] -= 1
+            bbox[1][0] -= 1
+        elif side == 'bottom':
+            mask = mask[:-1,:]
+        elif side == 'left':
+            mask = mask[:,1:]
+            bbox[0][1] -= 1
+            bbox[1][1] -= 1
+        else:
+            mask = mask[:,:-1]
+
         energy = manipulate_energy_image(energy, mask, bbox, side)
 
-    return img_output, remov
+    return img_output, removed_seams, mask, bbox
 
 # Add a vertical seam to the image
 def add_vertical_seam(img, seam, num_iter):
@@ -114,32 +129,18 @@ def find_vertical_seam(img, energy):
 
 def manipulate_energy_image(energy, mask, bbox, side):
     # Maniplate Energy Regions
-	if side == 'up':
-		energy[bbox[1][0]:, bbox[0][1]:bbox[1][1] + 1] = 1.0
-	elif side == 'bottom':
-		energy[:bbox[0][0], bbox[0][1]:bbox[1][1] + 1] = 1.0
-	elif side == 'left':
-		energy[bbox[0][0]:bbox[1][0] + 1, bbox[1][1]:] = 1.0
-	else:
-		energy[bbox[0][0]:bbox[1][0] + 1, :bbox[0][1]] = 1.0
+    if side == 'up':
+        energy[bbox[1][0]:, bbox[0][1]:bbox[1][1] + 1] = 255
+    elif side == 'bottom':
+        energy[:bbox[0][0], bbox[0][1]:bbox[1][1] + 1] = 255
+    elif side == 'left':
+        energy[bbox[0][0]:bbox[1][0] + 1, bbox[1][1]:] = 255
+    else:
+        energy[bbox[0][0]:bbox[1][0] + 1, :bbox[0][1]] = 255
 
-	# Mask Energy Image
-	energy[mask] = 1.0
-	# plt.imshow(mag)
-	# plt.show()
-
-	# Calculate New Mask
-	if side == 'up':
-		mask = mask[num:,:]
-		bbox[0][0] -= num
-		bbox[1][0] -= num
-	elif side == 'bottom':
-		mask = mask[:-num,:]
-	elif side == 'left':
-		mask = mask[:,num:]
-		bbox[0][1] -= num
-		bbox[1][1] -= num
-	else:
-		mask = mask[:,:-num]
-
-    return energy, mask, bbox
+    # Mask Energy Image
+    energy[mask] = 255
+    # plt.imshow(mag)
+    # plt.show()
+    
+    return energy

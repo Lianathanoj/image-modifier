@@ -12,7 +12,7 @@ if __name__ == "__main__":
 	f, axarr = plt.subplots(1, 2)
 
 	# Read in the image to modify
-	im = plt.imread("images/railroad_girl.jpeg", format='jpeg')
+	im = plt.imread("images/outdoor.jpg", format='jpeg')
 
 	# Run the MaskRCNN to detect objects
 	model, class_names = create_mrcnn.create_model()
@@ -63,6 +63,8 @@ if __name__ == "__main__":
 
 	# Vertical Seams
 	if isMiddle:
+		count = 0
+		im_temp = None
 		print("Object in middle")
 		# closest line is left line, delete from the left
 		if line is quad[0]:
@@ -70,26 +72,47 @@ if __name__ == "__main__":
 				im, mask, bbox = seam_removing.deleteLines(im, 3, 'vertical', mask, bbox, 'left')
 				line -= 1
 				middle_pt[1] -= 3
+				count += 1
+			for i in range(count):
+				im, im_temp, mask, bbox = seam_adding.addLines(im, 'blah', mask, bbox, 'right', im_temp)
+
 		# closest line is right line, delete from the right
 		elif line is quad[1]:
 			while abs(middle_pt[1] - line) > 5:
 				im, mask, bbox = seam_removing.deleteLines(im, 3, 'vertical', mask, bbox, 'right')
 				line -= 2
+				count += 1
+			for i in range(count):
+				print(count)
+				im, im_temp, mask, bbox = seam_adding.addLines(im, 'blah', mask, bbox, 'left', im_temp)
+				
 				# middle_pt[1] -= 3
 	else:
 		# object is on right side
 		if line is quad[2] or line is quad[1]:
 			print("Object is on right side")
-			im_temp = None
 			while abs(middle_pt[1] - line) > 5:
 				print(abs(middle_pt[1] - line))
 				im, im_temp, mask, bbox = seam_adding.addLines(im, 'blqh', mask, bbox, 'right', im_temp)
 				line +=2
+				count += 1
+			for i in range(count):
+				im, mask, bbox = seam_removing.deleteLines(im, 3, 'vertical', mask, bbox, 'left')
+
 		# object is on left side
 		elif line is quad[3] or line is quad[0]:
-			print("bye")
+			while abs(middle_pt[1] - line) > 5:
+				print(abs(middle_pt[1] - line))
+				im, im_temp, mask, bbox = seam_adding.addLines(im, 'blqh', mask, bbox, 'left', im_temp)
+				line +=1
+				count += 1
+			for i in range(count):
+				im, mask, bbox = seam_removing.deleteLines(im, 3, 'vertical', mask, bbox, 'right')
 
-	# Horizontal Seam
+
+	# Horizontal Seams
+
+	# if
 
 	axarr[0].set_title('Original')
 	axarr[1].imshow(im)

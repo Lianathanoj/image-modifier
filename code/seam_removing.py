@@ -28,8 +28,18 @@ def deleteLines(im, num, direction, mask, bbox, side):
 		mag[bbox[0][0]:bbox[1][0] + 1, bbox[1][1]:] = 1.0
 
 	# Mask Energy Image
-	mag[mask] = 1.0
+	mag[mask] = 1.
+
+	# Calculate New Mask
+	if side == 'up':
+		mask = mask[num:,:]
+	elif side == 'bottom':
+		mask = mask[:-num,:]
+	elif side == 'left':
+		mask = mask[:,num:]
+	else:
+		mask = mask[:,:-num]
 
 	# New Carved Image
 	carved = transform.seam_carve(im, mag, direction, num)
-	return (carved * 255).astype('uint8')
+	return (carved * 255).astype('uint8'), mask

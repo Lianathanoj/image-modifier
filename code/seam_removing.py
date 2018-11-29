@@ -55,6 +55,6 @@ def deleteLines(im, num, direction, mask, bbox, side):
 		mask = mask[:,:-num]
 
 
-	# New Carved Image
+	# New Carved Image3
 	carved = transform.seam_carve(im, mag, direction, num)
 	return (carved * 255).astype('uint8'), mask, bbox

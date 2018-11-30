@@ -9,7 +9,6 @@ def determineClosestVLine(middle_pt, image):
 	y_len, x_len, depth_len = image.shape
 	quad_line = [x_len/3, x_len*2/3, x_len, 0]
 	x_key = np.argmin(abs(np.asarray(quad_line) - middle_pt[1]))
-	print ("hi", quad_line)
 	return quad_line, quad_line[x_key], (middle_pt[1] < quad_line[1] and middle_pt[1] > quad_line[0])
 
 def determineClosestHLine(middle_pt, image):
@@ -33,12 +32,12 @@ def deleteLines(im, num, direction, mask, bbox, side):
 	elif side == 'left':
 		mag[bbox[0][0]:bbox[1][0] + 1, bbox[1][1]:] = 1.0
 	else:
-		mag[bbox[0][0]:bbox[1][0] + 1, :bbox[0][1]] = 1.0
+		mag[bbox[0][0]:bbox[1][0] + 1, 0:bbox[0][1]] = 1.0
+
 
 	# Mask Energy Image
 	mag[mask] = 1.0
-	# plt.imshow(mag)
-	# plt.show()
+	
 
 	# Calculate New Mask
 	if side == 'up':

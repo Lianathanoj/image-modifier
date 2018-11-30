@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Computer Vision Project</title>
+    <div class="center">
+      <h1>Image Modification Using Rule of Thirds</h1>
+      <p>Jeffrey Ma (dropped), Alex Le, Maggie Shi, Eric Yan, Victor Chen, Jonathan Lian</p>
+    </div>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+  </head>
+  <body>
+    <div class="divider"></div>
+    <div class="container">
+      <div class="section">
+        <h3 class="center">Abstract</h3>
+        <p>The goal of the project is to process an image to be more pleasing to the eye according to the rule of thirds—a photographical rule of thumb. This will be able to help photographers, especially amateur ones, improve their skills by giving them a general reference for how an image could be aesthetically improved. For the mid-term update, we used Mask R-CNN for feature extraction and seam carving in order to shift the most strongly identified human onto one of the gridlines (see the Introduction section for more details on the Rule of Thirds). We plan on polling people to compare this result to the original image to see how preferable the result is.</p>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="container">
+      <div class="section">
+        <h3 class="center">Introduction</h3>
+        <p>The rule of thirds is an image metric and well-known guideline used by photographers to increase the overall aesthetic of a composition, wherein an image is overlaid onto a 3 x 3 grid and the subject matter becomes more qualitatively agreeable if it falls within the middle intersections of the grid (see images below). While there do exist applications such as Photoshop which require some manual input on the user end to crop images to fit this rule, we wanted to create something that would implement this rule in different ways on existing photos so that the photos would, in theory, be more aesthetically pleasing and then see how these results compare to the originals. This method would also be more automatic compared to tools such as Photoshop which require incremental cropping by the user.</p>
+      </div>
+      <div class="center">
+        <img style="height:300px; width:auto; margin-bottom: 20px;" src="assets/img1.jpg" alt="Example 1">
+        <img style="height:300px; width:auto; margin-bottom: 20px;" src="assets/img2.jpg" alt="Example 2">
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="container">
+      <div class="section">
+        <h3 class="center">Technical Approach</h3>
+        <p>Our technical approach was subdivided into multiple steps. First, we utilized a Mask R-CNN which has been pre-trained upon a large set of images. We then were able to extract an image's important areas of interest which later allowed us to transform the image to adhere to the rule of thirds using seam carving techniques. The code for this approach can be found <a href=https://github.com/Lianathanoj/image-modifier>here.</a></p>
+      </div>
+      
+      <h5>1) Determining Bounding Box and Masks of Points of Interest Via Feature Extraction</h5>
+      <div style="margin-left:50px;">
+        <p><b>a) </b>Using a Mask Regional Convolutional Neural Network (R-CNN) applied from <a href=https://github.com/matterport/Mask_RCNN>this repository</a>, we extracted areas of interest in the format of bounding boxes and semantic segmentation masks for multiple different categories, including people, dogs, cats, and cars. Each different object found within an image had its own box or mask returned as well as its own resulting image where it is on a thirds line. Note that we are using pre-trained weights for Mask R-CNN because the classifier was sufficiently able to detect different classes well. Furthermore, rather than having a long and expensive training process which could potentially produce a suboptimal end classifier, we focused more time on the applications of Mask-RCNN. Our decision was made after we tested self-retrieved pictures to make sure that humans were being correctly detected and ensured that our bounding box correctly encapsulated human outlines.</p>
+        <p><b>b) </b>Dilation was then added to the outputed masks because the mask did not always cover the whole object being detected. Therefore expanding the mask was a safe option to ensure that the object will not be affected by the seam carvings.</p>
+      </div>
+
+      <h5>2) Seam Carving Techniques</h5>
+      <div style="margin-left:50px;">
+          <p><b>a) </b>First, we select all of the objects that we decide were relevant to the image such as humans, dogs, apple, etc. For each object we create a new image where the rule of thirds is applied to each object.</p>
+          <p><b>b) </b>We then determine the midpoint of the bounding box, which is our specific interest point. We apply rules to how the object should be moved to reach the new position for the rule of thirds. The general idea is to move the object to the closest line (rule of thirds).</p>
+          <p><b>c) </b>Finally, we calculate which line the midpoint is closest to: one of the gridlines or the edges of the picture (the labelled vertical lines in figure below). If the midpoint is closest to one of the edge lines (A or D), then we generate seams on the side of the edge closest to midpoint (on the left and right respectively). If the midpoint is closest to B or C, we carve seams from the other side of the image to shift the midpoint instead. By having both the same number of seam deletions and generations, we are able to approximately retain the original image aspect ratio.</p>
+      </div>
+
+      <div class="center">
+        <img style="height:300px; width:auto; margin-bottom: 20px;" src="assets/grid.png" alt="Grid Figure 1">
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="container">
+      <div class="section">
+        <h3 class="center">Experiment and Results</h3>
+        <p>Used pre-trained COCO weights for Mask R-CNN. The pre-trained COCO weights were trained on the <a href=http://cocodataset.org/>Coco dataset</a> which contains 330,000 images and 1.5 million object instances. The results of Mask R-CNN with the COCO pre-trained weights detected the correct objects very well for multiple types of images and scenery, but some of mask boundaries are slightly off, as seen by the figures below.</p>
+
+        <div class="center">
+          <img style="height:300px; width:auto; margin-bottom: 20px;" src="assets/experiment1.png" alt="Experiment 1">
+          <img style="height:300px; width:auto; margin-bottom: 20px;" src="assets/experiment2.png" alt="Experiment 2">
+          <img style="height:300px; width:auto; margin-bottom: 20px;" src="assets/experiment3.png" alt="Experiment 3">
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="container">
+      <div class="section">
+        <h3 class="center">Qualitative Results</h3>
+        <h5>1) Success Cases</h5>
+        <div style="margin-left:50px;">
+          <p><b>a) </b>In the two figures below, the subject is located in the middle between the two vertical rule-of-thirds lines. She is closer to the right side, so we will want to align her along that line. To do so, our seam carving algorithm removed seams from the right of the subject to move the vertical rule-of-thirds line to the left. The background of the picture has no significant objects/features so our seam removal has little negative consequences on the aesthetic of the picture.</p>
+          <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/outdoor_mod.png" alt="Result Figures 1"></div>
+
+          <p><b>b) </b>For the next two figures below, the original picture is already quite close to placing the subject along the second-third line; she is a little too far to the right of it when using the rule of thirds line as the base point. For this image, our algorithm removes vertical seams from the left of the subject.</p>
+          <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/railroad_girl_mod.png" alt="Result Figures 2"></div>
+
+          <p><b>c) </b>In the next two figures below, the subject in this image is in the center, but he is closer to the left rule-of-thirds line. To align the two, we remove seams to the left of the person.</p>
+          <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/lake_mod.png" alt="Result Figures 3"></div>
+
+          <p><b>d) </b>In the next two figures below, the subject is located far to the right in this picture, close to the right boundary of the image. Ideally, she should be placed along the second rule-of-thirds line. Our algorithm does a series of seam additions to the right of the woman and seam removals to the left of the woman until she is aligned correctly. There are slight artifacts resulting from the seam addition because there are not as many pixels to the right of the subject to replicate. For future steps, we will be trying to implement post processing techniques to reduce these artifacts.</p>
+          <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/beach_mod.png" alt="Result Figures 4"></div>
+        </div>
+
+        <h5>2) Failure Cases</h5>
+        <!--<p><b>a) </b>The two figures below represent an example of a failure case for our algorithm. The subject is in the center of the image but closer to the vertical first third line. When our algorithm removes seams from the left of the person, the seam carving algorithm has no knowledge of the road in the background or the straight edges of the side of the road that should be maintained. Thus, the removals leave obvious artifacts.</p>
+          <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result5.png" alt="Result Figures 5"></div>-->
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="container">
+      <div class="section">
+        <h3 class="center">Conclusion and Future Work</h3>
+          <p>We decided to introduce rule of thirds more in the project update to elucidate what exactly it was and our motivation for creating this image modifier. In our proposal, we had a pre-processing step to smooth out the images, but in our project update, we decided to remove this section and rely on a pre-trained Mask R-CNN to take in images as inputs without needing the pre-processing steps. In our proposal, we originally divided up our experiment into different methods and planned to compare the outputs, but we realized that our methods were less discrete and were more suitable to be used as separate steps to the same process that we will work to refine. As a result, in this project update, we combined the steps to carry out the rule of thirds image modifier. Furthermore, we listed “homography transformation” as a way to do image modification in our proposal, but ultimately we solely used  the seam carving technique to remove pixels from the image.</p>
+
+          <p>For now, we are only using bounding boxes, but in the future, we plan on utilizing Mask R-CNN’s segmentation mask within an energy function to better evaluate removing seams from the picture. We also plan to add code which takes into account multiple people (meaning we would need to change the code to decipher multiple bounding boxes and masks). We are also planning to extend our image modifier to work with a combination of objects and humans because we can utilize Mask R-CNN’s multiple classes to recognize different objects (e.g. cars, signs, animals, etc.). This way we can see if this method is more suitable for a certain type of image compared to others. Our seam deletion code could also use some future improvements because the current deletion code sometimes does not optimally delete seams to make a picture look as aesthetically pleasing as it should. We can also add post image processing techniques to make seam line additions transition between with the original image. We can try other techniques such as directly moving the object over into the correct position and using image completion models to fit in the areas left behind. Furthermore, we can add post processing techniques on the mask before altering the image such as adding dilation onto the mask to cover areas that were not originally masked, thereby allowing more room for error with the Mask R-CNN. Finally, we need to poll people to determine if the final outputs look better than the original images.</p>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="container">
+      <div class="center section">
+        <h3>References</h3>
+        <ul>
+          <li>http://cocodataset.org</li>
+          <li>https://github.com/matterport/Mask_RCNN</li>
+          <li>https://link.springer.com/chapter/10.1007/978-3-319-75417-8_44</li>
+          <li>https://www.safaribooksonline.com/library/view/opencv-3x-with/9781788396905</li>
+        </ul>
+        <h3>Picture Sources</h3>
+        <ul>
+          <li>https://www.michalschein.com/topic/rule-of-thirds-in-landscape</li>
+          <li>https://apggraphics.com/rule-of-thirds/</li>
+          <li>https://www.pexels.com/photo/alone-beach-female-quiet-274670/</li>
+          <li>https://iphonephotographyschool.com/people-in-landscapes/</li>
+          <li>https://digital-photography-school.com/13-tips-for-improving-outdoor-portraits/</li>
+          <li>https://www.pexels.com/photo/woman-in-blue-jacket-and-blue-jeans-walking-on-train-track-photography-1105378/</li>
+          <li>http://wallpaperswide.com/man_on_the_road-wallpapers.html</li> 
+          <li>http://www.dogingtonpost.com/dogscaping-creating-the-ultimate-dog-friendly-landscape/</li>
+          <li>https://www.photocase.com/photos/1920164-human-being-nature-dog-water-landscape-animal-winter-cold-photocase-stock-photo</li>
+          <li>https://mentalfloss.com/article/516438/8-tricks-help-your-cat-and-dog-get-along</li>
+          <li>https://www.businessinsider.com/the-difference-between-dog-and-cat-people-2014-5</li>
+          <li>https://healthypets.mercola.com/sites/healthypets/archive/2017/05/04/differences-between-dogs-cats.aspx</li>
+          <li>https://www.mnn.com/family/pets/stories/dogs-smarter-cats</li>
+          <li>https://www.perfect-fit.co.uk/letting-your-cat-outside</li>
+          <li>https://www.carmagazine.co.uk/car-reviews/long-term-tests/ford/ford-fiesta-st-2015-long-term-test-review/</li>
+          <li>https://www.cnet.com/roadshow/</li>
+          <li>http://www.toyotapaloalto.com/blog/2018-toyota-rav4-performance-and-drivetrain-features/</li>
+          <li>https://www.tesla.com/</li>
+        </ul>
+      </div>
+    </div>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+  </body>
+</html>

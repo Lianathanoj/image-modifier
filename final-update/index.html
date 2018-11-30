@@ -81,42 +81,42 @@
           <p><b>c) </b>In the next two figures below, the subject in this image is in the center, but he is closer to the left rule-of-thirds line. To align the two, we remove seams to the left of the person.</p>
           <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/lake_mod.png"></div>
 
-          <p><b>d) </b>In the next two figures below, the subject is located far to the right in this picture, close to the right boundary of the image. Ideally, she should be placed along the second rule-of-thirds line. Our algorithm does a series of seam additions to the right of the woman and seam removals to the left of the woman until she is aligned correctly. There are slight artifacts resulting from the seam addition because there are not as many pixels to the right of the subject to replicate. For future steps, we will be trying to implement post processing techniques to reduce these artifacts.</p>
+          <p><b>d) </b>In the next two figures below, the subject is located far to the right in this picture, close to the right boundary of the image. Our algorithm does a series of seam additions to the right of the woman and seam removals to the left of the woman until she is aligned correctly onto the second rule-of-thirds line.</p>
           <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/beach_mod.png"></div>
         </div>
 
         <h5>2) Object/Animal Success Cases</h5>
         <div style="margin-left:50px;">
-          <p><b>a) </b>fire hydrant</p>
+          <p><b>a) </b>In the original figure, the fire hydrant is located far to the right of the picture. Because of its location, we have done seam additions to the right of the object and seam removals to the left of it. The seam additions are not very noticeable but can be found by looking at the very slight discrepancy in the grass texture to the right of the fire hydrant in the modified image.</p>
           <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/fire_hydrant_mod.png"></div>
 
-          <p><b>b) </b>cat pounce</p>
+          <p><b>b) </b>Based upon the red dot in the original image, the kitten's center is to the left of the second rule-of-thirds line. As a result, we moved the kitten's center to the right and had our algorithm emphasize seam removals more than seam additions for this case.</p>
           <div class="center"><img style="height:250px; width:auto; margin-bottom: 20px;" src="assets/result_pics/cat_pounce_mod.png"></div>
 
-          <p><b>c) </b>car tesla 1</p>
+          <p><b>c) </b>Similar to the kitten figures above, the Tesla's center can be found close to the center of the picture, but ultimately it is closer to the second rule-of-thirds line than it is to the first rule-of-thirds line. As a result, the Tesla is moved rightwards with an emphasis on seam removals. While the car was successfully placed onto the second rule-of-thirds line, the seam removals are slightly noticeable because the yellow road lines are slightly malformed.</p>
           <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/car_tesla_mod.png"></div>
 
-          <p><b>d) </b>car tesla 2</p>
+          <p><b>d) </b>For these figures, the center of the car was detected to be closer to the second rule-of-thirds line. While the car was successfully moved to this line, the car in the original picture took up a larger proportion of the image, meaning that the trunk is slightly closer to the right of the modified image than desired. Our algorithm opted to do seam additions more to the left when more additions to the right would have been preferable. Still, we consider this a success case because the car was moved successfully, no noticeable artifacts occurred, and the car itself did not become malformed.</p>
           <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/car_mod.png"></div>
 
-          <p><b>e) </b>flower</p>
+          <p><b>e) </b>According to our algorithm, the center of the flowers is closer to the first rule-of-thirds line and was thus moved rightward. Because the floor and background's overall coloring scheme is relatively consistent, there are no noticeable artifacts despite having seam additions and removals.</p>
           <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/flower_mod.png"></div>
 
-          <p><b>f) </b>dog grass</p>
+          <p><b>f) </b> Because of our bounding box calculations, the algorithm opted to place the center of the dog slightly to the left of its mouth because of the position of its hind legs. While a photographer might have more emphasized the dog's face when framing it for the rule of thirds, our algorithm placed the center of the dog's bounding box on the first rule-of-thirds line. The background is also slightly blurrier, meaning any artifacts that could have potentially shown up would blend in with the background despite our algorithm's changes. This means our algorithm for rule of thirds works especially well with other photographic elements such as having a different lense type or aperture setting with a more blurred background.</p>
           <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/dog_grass_mod.png"></div>
         </div>
 
-        <h5>2) Multiple Object/Animal Success Cases</h5>
+        <h5>3) Multiple Human/Object/Animal Success Cases</h5>
         <div style="margin-left:50px;">
-          <p><b>a) </b>teddy bear</p>
+          <p><b>a) </b>For the first two figures below, our algorithm first selects the child as the person of interest and finds its bounding box. For the second two figures, our algorithm selects the teddy bear as the object of interest. Based upon the figures' respective centers, we are able to take into account multiple humans, animals, or objects and showcase different combinations of pictures which adhere to the rule of thirds.</p>
           <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/teddybear_mod1.png"></div>
           <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/teddybear_mod2.png"></div>
 
-          <p><b>b) </b>human dog dock</p>
+          <p><b>b) </b>We find different combinations of pictures based upon the center of the dog and person. Even though their relative centers are close to each other, when the dog is selected as the object of interest, the modified image contains a malformed human as compared to when the human is selected as the object of interest. This means that our algorithm occasionally cannot fully account for multiple objects when they are in close proximity to each other, but that is ameliorated by the fact that different outputs are generated which can still contain stable outputs.</p>
           <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/human_dog_dock_mod1.png"></div>
           <div class="center"><img style="height:320px; width:auto; margin-bottom: 20px;" src="assets/result_pics/human_dog_dock_mod2.png"></div>
 
-          <p><b>c) </b>dog cat trunk</p>
+          <p><b>c) </b>For this case, while there are three distinct objects (dog, cat, and trunk),</p>
           <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/dog_cat_trunk_mod1.png"></div>
           <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/dog_cat_trunk_mod2.png"></div>
 
@@ -153,6 +153,9 @@
     <div class="container">
       <div class="section">
         <h3 class="center">Conclusion and Future Work</h3>
+          added non-human recognition, take into account multiple objects, optimized seam removals/additions (not as many obvious artifacts)
+
+
           <p>We decided to introduce rule of thirds more in the project update to elucidate what exactly it was and our motivation for creating this image modifier. In our proposal, we had a pre-processing step to smooth out the images, but in our project update, we decided to remove this section and rely on a pre-trained Mask R-CNN to take in images as inputs without needing the pre-processing steps. In our proposal, we originally divided up our experiment into different methods and planned to compare the outputs, but we realized that our methods were less discrete and were more suitable to be used as separate steps to the same process that we will work to refine. As a result, in this project update, we combined the steps to carry out the rule of thirds image modifier. Furthermore, we listed “homography transformation” as a way to do image modification in our proposal, but ultimately we solely used  the seam carving technique to remove pixels from the image.</p>
 
           <p>For now, we are only using bounding boxes, but in the future, we plan on utilizing Mask R-CNN’s segmentation mask within an energy function to better evaluate removing seams from the picture. We also plan to add code which takes into account multiple people (meaning we would need to change the code to decipher multiple bounding boxes and masks). We are also planning to extend our image modifier to work with a combination of objects and humans because we can utilize Mask R-CNN’s multiple classes to recognize different objects (e.g. cars, signs, animals, etc.). This way we can see if this method is more suitable for a certain type of image compared to others. Our seam deletion code could also use some future improvements because the current deletion code sometimes does not optimally delete seams to make a picture look as aesthetically pleasing as it should. We can also add post image processing techniques to make seam line additions transition between with the original image. We can try other techniques such as directly moving the object over into the correct position and using image completion models to fit in the areas left behind. Furthermore, we can add post processing techniques on the mask before altering the image such as adding dilation onto the mask to cover areas that were not originally masked, thereby allowing more room for error with the Mask R-CNN. Finally, we need to poll people to determine if the final outputs look better than the original images.</p>

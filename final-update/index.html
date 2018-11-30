@@ -116,15 +116,15 @@
           <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/human_dog_dock_mod1.png"></div>
           <div class="center"><img style="height:320px; width:auto; margin-bottom: 20px;" src="assets/result_pics/human_dog_dock_mod2.png"></div>
 
-          <p><b>c) </b>For this case, while there are three distinct objects (dog, cat, and trunk),</p>
-          <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/dog_cat_trunk_mod1.png"></div>
+          <p><b>c) </b>For this case, while there are three distinct objects (dog, cat, and tree trunk), our Mask R-CNN is only able to recognize the cat and dog. As such, the bounding boxes are selected for those two animals, and both outputs represent success cases because the animals in the original figure were not in close enough proximity to overlap with the other rule-of-thirds line.</p>
+          <div class="center"><img style="height:320px; width:auto; margin-bottom: 20px;" src="assets/result_pics/dog_cat_trunk_mod1.png"></div>
           <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/dog_cat_trunk_mod2.png"></div>
 
-          <p><b>e) </b>cat dog</p>
+          <p><b>e) </b>Even though the dog and cat in this picture are slightly overlapping each other, the output with the dog's center chosen for the bounding box has a slightly better output than the one with the cat's center because there noticeable seam additions when the cat is moved to the second rule-of-thirds line as compared to the when the dog is moved to the first rule-of-thirds line.</p>
           <div class="center"><img style="height:300px; width:auto; margin-bottom: 20px;" src="assets/result_pics/cat_dog_mod1.png"></div>
           <div class="center"><img style="height:300px; width:auto; margin-bottom: 20px;" src="assets/result_pics/cat_dog_mod2.png"></div>
 
-          <p><b>f) </b>dog cat grass</p>
+          <p><b>f) </b>Similar to the case above, a kitten and puppy are the subjects of interest. Because each animal is already close to a respective rule-of-thirds line, there were no problems in selecting the bounding boxes, placing the animals on a rule-of-third line, and doing seam removals and additions.</p>
           <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/dog_cat_grass_mod1.png"></div>
           <div class="center"><img style="height:350px; width:auto; margin-bottom: 20px;" src="assets/result_pics/dog_cat_grass_mod2.png"></div>
         </div>
